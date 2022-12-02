@@ -1,16 +1,33 @@
-# NUCL_FP
+# NUCL 575 Final Project - Purdue University
 
-Files for Final Project:
+### Files for Final Project:
 
-1) 
-2)
-3)
+1) **data.py**
 
-Data for Final Project
+To download and prepare data before inputting it to the model
+
+2) **model_train.py**
+
+Where the Neural Network is defined and initialize. Also, it is trained directly with the training set
+
+3) **evaluate.py**
+
+To evaluate the performance of the NN using the test set. Comparing also the train and eval sets
+
+### Data for Final Project
 
 Download from:
 https://assets.digitalocean.com/articles/signlanguage_data/sign-language-mnist.tar.gz
+
 Use the following command to download:
 ```bash
 wget https://assets.digitalocean.com/articles/signlanguage_data/sign-language-mnist.tar.gz 
 ```
+
+### Authors
+
+Made by:
+- Alejandro Mayo
+- Elena Gómez
+- Lucia Ostolaza 
+- Mario Utiel (mutiel@purdue.edu)
