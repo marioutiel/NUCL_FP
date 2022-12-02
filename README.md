@@ -2,6 +2,11 @@
 
 ### Files for Final Project:
 
+You can download the files by using the following command:
+```bash
+git clone 
+```
+
 1) **data.py**
 
 To download and prepare data before inputting it to the model
