@@ -4,7 +4,7 @@
 
 You can download the files by using the following command:
 ```bash
-git clone 
+git clone https://github.com/marioutiel/NUCL_FP.git
 ```
 
 1) **data.py**
