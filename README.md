@@ -32,7 +32,7 @@ wget https://assets.digitalocean.com/articles/signlanguage_data/sign-language-mn
 ### Authors
 
 Made by:
-- Alejandro Mayo
+- Alejandro Mayo (amayogar@purdue.edu)
 - Elena Gómez
 - Lucia Ostolaza 
 - Mario Utiel (mutiel@purdue.edu)
