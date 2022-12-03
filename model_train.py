@@ -1,10 +1,10 @@
-from torch.utils.data import Dataset
 from torch.autograd import Variable
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torch
 import sys
+from time import time 
 
 from data import get_train_test_loaders
 
@@ -42,10 +42,12 @@ class FullyNet(nn.Module):
         
         super(FullyNet, self).__init__()
     
-        self.fc = nn.Linear(784, 240)
-        self.fc1 = nn.Linear(240, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 24)
+        self.fc = nn.Linear(784, 928)
+        self.fc1 = nn.Linear(928, 700)
+        self.fc2 = nn.Linear(700, 400)
+        self.fc3 = nn.Linear(400, 120)
+        self.fc4 = nn.Linear(120, 48)
+        self.fc5 = nn.Linear(48, 24)
 
     def forward(self, x):
         
@@ -53,8 +55,10 @@ class FullyNet(nn.Module):
         x = F.relu(self.fc(x))
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
+        x = F.relu(self.fc4(x))
 
-        return self.fc3(x)
+        return self.fc5(x)
 
 
 def main(conv, n_epochs=15):
@@ -73,9 +77,15 @@ def main(conv, n_epochs=15):
     trainloader, _ = get_train_test_loaders()
 
     print(f'{"="*5} Training with {n_epochs} Epochs {"="*5}')
+    start = time()
     for epoch in range(n_epochs):
         train(net, criterion, optimizer, trainloader, epoch)
         scheduler.step()
+    end = time()
+    total_secs = int(end-start)
+    mins = total_secs//60
+    secs = total_secs%60
+    print(f'Time Spent Training: {mins} Minutes, {secs} Seconds')
     if conv:
         torch.save(net.state_dict(), 'conv_checkpoint.pth')
     else:
