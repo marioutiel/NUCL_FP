@@ -5,9 +5,10 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch
 import numpy as np
+import sys
 
 from data import get_train_test_loaders
-from model_train import Net
+from model_train import ConvNet, FullyNet
 
 
 def evaluate(outputs: Variable, labels: Variable) -> float:
@@ -18,7 +19,7 @@ def evaluate(outputs: Variable, labels: Variable) -> float:
 
 
 def batch_evaluate(
-        net: Net,
+        net,
         dataloader: torch.utils.data.DataLoader) -> float:
     """Evaluate neural network in batches, if dataset is too large."""
     score = n = 0.0
@@ -31,18 +32,26 @@ def batch_evaluate(
     return score / n
 
 
-def validate():
+def validate(conv):
     trainloader, testloader = get_train_test_loaders()
-    net = Net().float().eval()
+    
 
-    pretrained_model = torch.load("checkpoint.pth")
+    if conv:
+        net = ConvNet().float().eval()
+        pretrained_model = torch.load("conv_checkpoint.pth")
+        print('=' * 10, 'Convolutional NN', '=' * 10)
+    else:
+        net = FullyNet().float().eval()
+        pretrained_model = torch.load("full_checkpoint.pth")
+        print('=' * 10, 'Fully Connected NN', '=' * 10)
     net.load_state_dict(pretrained_model)
 
-    print('=' * 10, 'PyTorch', '=' * 10)
+    
     train_acc = batch_evaluate(net, trainloader) * 100.
     print('Training accuracy: %.1f' % train_acc)
     test_acc = batch_evaluate(net, testloader) * 100.
     print('Validation accuracy: %.1f' % test_acc)
 
 if __name__ == '__main__':
-    validate()
+    conv = bool(int(sys.argv[1]))
+    validate(conv)

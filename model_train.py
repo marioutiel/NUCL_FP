@@ -4,14 +4,15 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torch
+import sys
 
 from data import get_train_test_loaders
 
-class Net(nn.Module):
+class ConvNet(nn.Module):
 
     def __init__(self):
 
-        super(Net, self).__init__()
+        super(ConvNet, self).__init__()
         self.pool = nn.MaxPool2d(2, 2)
 
         self.conv1 = nn.Conv2d(1, 6, 3)
@@ -35,9 +36,35 @@ class Net(nn.Module):
 
         return self.fc3(x)
 
-def main():
+class FullyNet(nn.Module):
+
+    def __init__(self):
+        
+        super(FullyNet, self).__init__()
     
-    net = Net().float()
+        self.fc = nn.Linear(784, 240)
+        self.fc1 = nn.Linear(240, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 24)
+
+    def forward(self, x):
+        
+        x = x.view(-1, 28*28)
+        x = F.relu(self.fc(x))
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+
+        return self.fc3(x)
+
+
+def main(conv, n_epochs=15):
+    
+    if conv:
+        print(f'{"="*5} Using Convolutional Neural Network {"="*5}')
+        net = ConvNet().float()
+    else:
+        print(f'{"="*5} Using Fully Connected Neural Network {"="*5}')
+        net = FullyNet().float()
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
 
@@ -45,10 +72,14 @@ def main():
 
     trainloader, _ = get_train_test_loaders()
 
-    for epoch in range(15):
+    print(f'{"="*5} Training with {n_epochs} Epochs {"="*5}')
+    for epoch in range(n_epochs):
         train(net, criterion, optimizer, trainloader, epoch)
         scheduler.step()
-    torch.save(net.state_dict(), 'checkpoint.pth')
+    if conv:
+        torch.save(net.state_dict(), 'conv_checkpoint.pth')
+    else:
+        torch.save(net.state_dict(), 'full_checkpoint.pth')
 
 def train(net, criterion, optimizer, trainloader, epoch):
 
@@ -69,4 +100,7 @@ def train(net, criterion, optimizer, trainloader, epoch):
             print(f'Epoch: {epoch} with Index: {idx} --> Loss: {running_loss/(idx+1)}')
 
 if __name__ == '__main__':
-    main()
+    conv = bool(int(sys.argv[1]))
+    n_epochs = int(sys.argv[2])
+    
+    main(conv, n_epochs)
