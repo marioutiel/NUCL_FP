@@ -34,5 +34,5 @@ wget https://assets.digitalocean.com/articles/signlanguage_data/sign-language-mn
 Made by:
 - Alejandro Mayo (amayogar@purdue.edu)
 - Elena Gómez
-- Lucia Ostolaza 
+- Lucia Ostolaza (lostolaz@purdue.edu)
 - Mario Utiel (mutiel@purdue.edu)
