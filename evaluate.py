@@ -1,11 +1,10 @@
-from torch.utils.data import Dataset
 from torch.autograd import Variable
-import torch.nn as nn
 import torch.nn.functional as F
-import torch.optim as optim
 import torch
 import numpy as np
 import sys
+import onnx
+import onnxruntime as ort
 
 from data import get_train_test_loaders
 from model_train import ConvNet, FullyNet
@@ -51,6 +50,23 @@ def validate(conv):
     print('Training accuracy: %.1f' % train_acc)
     test_acc = batch_evaluate(net, testloader) * 100.
     print('Validation accuracy: %.1f' % test_acc)
+
+    fname = "signlanguage.onnx"
+    dummy = torch.randn(1, 1, 28, 28)
+    torch.onnx.export(net, dummy, fname, input_names=['input'])
+
+    model = onnx.load(fname)
+    onnx.checker.check_model(model)
+
+    ort_session = ort.InferenceSession(fname)
+    net = lambda inp: ort_session.run(None, {'input': inp.data.numpy()})[0]
+
+    print('=' * 10, 'ONNX', '=' * 10)
+    train_acc = batch_evaluate(net, trainloader) * 100.
+    print('Training accuracy: %.1f' % train_acc)
+    test_acc = batch_evaluate(net, testloader) * 100.
+    print('Validation accuracy: %.1f' % test_acc)
+
 
 if __name__ == '__main__':
     conv = bool(int(sys.argv[1]))
