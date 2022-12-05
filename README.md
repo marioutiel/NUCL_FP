@@ -44,7 +44,3 @@ Made by:
 - Elena Gómez
 - Lucia Ostolaza (lostolaz@purdue.edu)
 - Mario Utiel (mutiel@purdue.edu)
-
-
-
-https://notebook.community/marcotcr/lime/doc/notebooks/Tutorial%20-%20images%20-%20Pytorch
