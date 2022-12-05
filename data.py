@@ -1,11 +1,8 @@
 from torch.utils.data import Dataset
-from torch.autograd import Variable
 import torchvision.transforms as transforms
-import torch.nn as nn
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
-from math import floor
 import csv
 
 class SignLanguageMNIST(Dataset):
@@ -74,24 +71,7 @@ def get_train_test_loaders(batch_size=32):
     return trainloader, testloader
 
 def plot(n_rows=3,n_cols=3):
-    trainloader, _ = get_train_test_loaders()
-    
     fig, ax = plt.subplots(n_rows, n_cols, figsize=(15, 15))
-    
-    #for idx, batch in enumerate(trainloader):
-    #    if idx < n_rows*n_cols:
-    #        image = batch['image'].squeeze().permute(1,2,0)
-    #        label = batch['label']
-    #
-    #        i = floor(idx/n_rows)
-    #        j = idx%n_cols
-    #
-    #        ax[i,j].imshow(image, cmap='gray')
-    #        ax[i,j].set_title(f'Label: {"ABCDEFGHIJQLMNOPQRSTUVWXYZ"[int(label[1][0].item())]}')
-    #        ax[i,j].axis('off')
-    #    
-    #    else:
-    #        break
     
     mapping = SignLanguageMNIST.get_label_mapping()
     labels, samples = SignLanguageMNIST.read_label_samples_from_csv('data/sign_mnist_train.csv')

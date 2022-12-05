@@ -4,7 +4,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch
 import sys
-from time import time 
+from time import time
+import matplotlib.pyplot as plt
 
 from data import get_train_test_loaders
 
@@ -106,11 +107,31 @@ def train(net, criterion, optimizer, trainloader, epoch):
         optimizer.step()
 
         running_loss += loss.item()
+        epoch_loss = running_loss/(idx+1)
+        losses.append(epoch_loss)
         if idx%100 == 0:
-            print(f'Epoch: {epoch} with Index: {idx} --> Loss: {running_loss/(idx+1)}')
+            print(f'Epoch: {epoch} with Index: {idx} --> Loss: {epoch_loss}')
 
 if __name__ == '__main__':
     conv = bool(int(sys.argv[1]))
     n_epochs = int(sys.argv[2])
     
+    losses = []
     main(conv, n_epochs)
+
+    net, loss = '', ''
+    if conv:
+        net = 'Convolution NN'
+        loss = 'CNNLoss.jpg'
+    else:
+        net = 'Fully Connected NN'
+        loss = 'FCNNLoss.jpg'
+
+    plt.figure(figsize=(10,5))
+    plt.title('Losses During Training')
+    plt.plot(losses,label=net)
+    plt.xlabel('Iterations')
+    plt.ylabel('Loss')
+    plt.legend()
+
+    plt.savefig(loss)

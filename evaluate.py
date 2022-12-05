@@ -51,6 +51,8 @@ def validate(conv):
     test_acc = batch_evaluate(net, testloader) * 100.
     print('Validation accuracy: %.1f' % test_acc)
 
+    trainloader, testloader = get_train_test_loaders(1)
+
     fname = "signlanguage.onnx"
     dummy = torch.randn(1, 1, 28, 28)
     torch.onnx.export(net, dummy, fname, input_names=['input'])
